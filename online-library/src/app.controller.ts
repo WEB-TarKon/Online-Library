@@ -14,4 +14,12 @@ export class AppController {
     ) {
         return res.status(201).send(req.query)
     }
+
+  @Post('/')
+  getHello2(
+      @Req() req: Request,
+      @Res() res: Response,
+  ) {
+    return res.status(201).send(req.query)
+  }
 }

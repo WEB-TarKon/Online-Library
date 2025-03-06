@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  node_app:
+    image: node:latest
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=online_library
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+    depends_on:
+      - postgres
+      - rabbitmq
+    command: sh -c "npm install && npm start"
+
+  postgres:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: online_library
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+  #api-gateway:
+  #  build: ./services/api-gateway
+  #  depends_on:
+  #    - rabbitmq
+  #    - postgres
+  #  environment:
+  #    RABBITMQ_URL: amqp://rabbitmq
+  #    DATABASE_URL: postgres://admin:postgres@postgres:5432/online_library
+  #  ports:
+  #    - "3000:3000"
+
+volumes:
+  pg_data:
+  node_app:
+  postgres:
+  rabbitmq:
+  api-gateway:
