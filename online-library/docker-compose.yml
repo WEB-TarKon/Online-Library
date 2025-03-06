@@ -22,7 +22,7 @@ services:
     command: sh -c "npm install && npm start"
 
   postgres:
-    image: postgres:latest
+    image: postgres:17
     restart: always
     environment:
       POSTGRES_USER: postgres
@@ -32,6 +32,17 @@ services:
       - "5432:5432"
     volumes:
       - pg_data:/var/lib/postgresql/data
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+      - pgadmin:/var/www/nest_test/docker-volumes/pgadmin
+    ports:
+      - "5050:80"
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -58,5 +69,6 @@ volumes:
   pg_data:
   node_app:
   postgres:
+  pgadmin:
   rabbitmq:
   api-gateway:
