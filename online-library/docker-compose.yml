@@ -22,7 +22,7 @@ services:
     command: sh -c "npm install && npm start"
 
   postgres:
-    image: postgres:17
+    image: postgres:latest
     restart: always
     environment:
       POSTGRES_USER: postgres
