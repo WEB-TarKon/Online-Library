@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { UsersModule } from '@entities/users.module';
-import { TypeOrmModule } from '@db/typeorm.module';
 import { ConfigModule } from './config.module';
+import {TypeOrmModule as NestTypeOrmModule} from "@nestjs/typeorm/dist/typeorm.module";
 
 @Module({
-  imports: [UsersModule, TypeOrmModule, ConfigModule]
+  imports: [UsersModule, NestTypeOrmModule, ConfigModule]
 })
 export class AppModule {}
