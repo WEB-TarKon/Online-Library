@@ -1,9 +1,15 @@
-import { Module } from '@nestjs/common';
-import { UsersModule } from '@entities/users.module';
-import { ConfigModule } from './config.module';
-import {TypeOrmModule as NestTypeOrmModule} from "@nestjs/typeorm/dist/typeorm.module";
+import {Module} from '@nestjs/common';
+import {TypeOrmModule} from "@db/typeorm.module";
+import {UserModule} from '@entities/user/user.module';
+import {ConfigModule} from "@nestjs/config";
+
 
 @Module({
-  imports: [UsersModule, NestTypeOrmModule, ConfigModule]
+    imports: [
+        ConfigModule,
+        TypeOrmModule,
+        UserModule
+    ]
 })
-export class AppModule {}
+export class AppModule {
+}
