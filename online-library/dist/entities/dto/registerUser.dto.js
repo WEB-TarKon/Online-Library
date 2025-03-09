@@ -9,40 +9,33 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UpdateUserDto = exports.UserRole = void 0;
+exports.RegisterUserDto = void 0;
 const class_validator_1 = require("class-validator");
-var UserRole;
-(function (UserRole) {
-    UserRole["ADMIN"] = "admin";
-    UserRole["USER"] = "user";
-})(UserRole || (exports.UserRole = UserRole = {}));
-class UpdateUserDto {
+const updateUser_dto_1 = require("./updateUser.dto");
+class RegisterUserDto {
     name;
     email;
+    password;
     role;
-    created_at;
 }
-exports.UpdateUserDto = UpdateUserDto;
+exports.RegisterUserDto = RegisterUserDto;
 __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.MinLength)(1),
-    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
-], UpdateUserDto.prototype, "name", void 0);
+], RegisterUserDto.prototype, "name", void 0);
 __decorate([
     (0, class_validator_1.IsEmail)(),
-    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
-], UpdateUserDto.prototype, "email", void 0);
+], RegisterUserDto.prototype, "email", void 0);
 __decorate([
-    (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsEnum)(UserRole),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MinLength)(6),
     __metadata("design:type", String)
-], UpdateUserDto.prototype, "role", void 0);
+], RegisterUserDto.prototype, "password", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsISO8601)(),
-    __metadata("design:type", Date)
-], UpdateUserDto.prototype, "created_at", void 0);
-//# sourceMappingURL=updateUser.dto.js.map
+    (0, class_validator_1.IsEnum)(updateUser_dto_1.UserRole),
+    __metadata("design:type", String)
+], RegisterUserDto.prototype, "role", void 0);
+//# sourceMappingURL=registerUser.dto.js.map

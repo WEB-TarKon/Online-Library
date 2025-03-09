@@ -16,77 +16,126 @@ exports.UserController = void 0;
 const common_1 = require("@nestjs/common");
 const user_service_1 = require("./user.service");
 const updateUser_dto_1 = require("../dto/updateUser.dto");
+const registerUser_dto_1 = require("../dto/registerUser.dto");
+const loginUser_dto_1 = require("../dto/loginUser.dto");
+const jwt_auth_guard_1 = require("../../auth/jwt-auth.guard");
 let UserController = class UserController {
     userService;
     constructor(userService) {
         this.userService = userService;
     }
-    async getAllUsers(res) {
+    async registerUser(body, res) {
+        const result = await this.userService.registerUser(body);
+        return res.send({
+            status: 'ok',
+            data: result,
+        });
+    }
+    async loginUser(body, res) {
+        const result = await this.userService.loginUser(body);
+        return res.send({
+            status: 'ok',
+            data: result,
+        });
+    }
+    async getAllUsers(req, res) {
+        const currentUser = req.user;
+        if (currentUser.role !== 'admin') {
+            throw new common_1.ForbiddenException('Only admin can get all users');
+        }
         const users = await this.userService.getAllUsers();
         return res.send({
             status: 'ok',
-            data: users
+            data: users,
         });
     }
-    async getUser(id, res) {
+    async getUser(id, req, res) {
+        const currentUser = req.user;
+        if (currentUser.role !== 'admin' && currentUser.userId !== id) {
+            throw new common_1.ForbiddenException('You cannot get data of another user');
+        }
         const userData = await this.userService.getUserData(id);
+        if (!userData) {
+            throw new common_1.NotFoundException('User not found');
+        }
         return res.send({
             status: 'ok',
-            data: userData
+            data: userData,
         });
     }
-    async createUser(req, res) {
-        await this.userService.createUser(req.body);
-        return res.send({ status: 'ok' });
+    async updateUser(id, body, req, res) {
+        const currentUser = req.user;
+        const { user: updatedUser, message } = await this.userService.updateUserData(id, body, currentUser);
+        return res.send({
+            status: 'ok',
+            data: updatedUser,
+            message,
+        });
     }
-    async updateUser(id, body, res) {
-        await this.userService.updateUserData(id, body);
-        return res.send({ status: 'ok' });
-    }
-    async deleteUser(id, res) {
+    async deleteUser(id, req, res) {
+        const currentUser = req.user;
+        if (currentUser.role !== 'admin' && currentUser.userId !== id) {
+            throw new common_1.ForbiddenException('You can delete only yourself (or be admin).');
+        }
         await this.userService.deleteUser(id);
         return res.send({ status: 'ok' });
     }
 };
 exports.UserController = UserController;
 __decorate([
-    (0, common_1.Get)('/'),
-    __param(0, (0, common_1.Res)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
-], UserController.prototype, "getAllUsers", null);
-__decorate([
-    (0, common_1.Get)('/:id'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.Post)('/register'),
+    __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:paramtypes", [registerUser_dto_1.RegisterUserDto, Object]),
     __metadata("design:returntype", Promise)
-], UserController.prototype, "getUser", null);
+], UserController.prototype, "registerUser", null);
 __decorate([
-    (0, common_1.Post)('/'),
+    (0, common_1.Post)('/login'),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Res)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [loginUser_dto_1.LoginUserDto, Object]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "loginUser", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Get)('/'),
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Res)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
-], UserController.prototype, "createUser", null);
+], UserController.prototype, "getAllUsers", null);
 __decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Get)('/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Req)()),
+    __param(2, (0, common_1.Res)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object, Object]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "getUser", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Put)('/:id'),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
-    __param(2, (0, common_1.Res)()),
+    __param(2, (0, common_1.Req)()),
+    __param(3, (0, common_1.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, updateUser_dto_1.UpdateUserDto, Object]),
+    __metadata("design:paramtypes", [String, updateUser_dto_1.UpdateUserDto, Object, Object]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "updateUser", null);
 __decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Delete)('/:id'),
     __param(0, (0, common_1.Param)('id')),
-    __param(1, (0, common_1.Res)()),
+    __param(1, (0, common_1.Req)()),
+    __param(2, (0, common_1.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:paramtypes", [String, Object, Object]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "deleteUser", null);
 exports.UserController = UserController = __decorate([

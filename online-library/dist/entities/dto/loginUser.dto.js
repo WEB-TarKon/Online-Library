@@ -9,40 +9,20 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UpdateUserDto = exports.UserRole = void 0;
+exports.LoginUserDto = void 0;
 const class_validator_1 = require("class-validator");
-var UserRole;
-(function (UserRole) {
-    UserRole["ADMIN"] = "admin";
-    UserRole["USER"] = "user";
-})(UserRole || (exports.UserRole = UserRole = {}));
-class UpdateUserDto {
-    name;
+class LoginUserDto {
     email;
-    role;
-    created_at;
+    password;
 }
-exports.UpdateUserDto = UpdateUserDto;
-__decorate([
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.MinLength)(1),
-    (0, class_validator_1.IsOptional)(),
-    __metadata("design:type", String)
-], UpdateUserDto.prototype, "name", void 0);
+exports.LoginUserDto = LoginUserDto;
 __decorate([
     (0, class_validator_1.IsEmail)(),
-    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
-], UpdateUserDto.prototype, "email", void 0);
+], LoginUserDto.prototype, "email", void 0);
 __decorate([
-    (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsEnum)(UserRole),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.MinLength)(6),
     __metadata("design:type", String)
-], UpdateUserDto.prototype, "role", void 0);
-__decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsISO8601)(),
-    __metadata("design:type", Date)
-], UpdateUserDto.prototype, "created_at", void 0);
-//# sourceMappingURL=updateUser.dto.js.map
+], LoginUserDto.prototype, "password", void 0);
+//# sourceMappingURL=loginUser.dto.js.map

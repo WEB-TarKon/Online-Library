@@ -6,5 +6,5 @@ export declare class UpdateUserDto {
     name: string;
     email: string;
     role: UserRole;
-    created_at: Date;
+    created_at?: Date;
 }
