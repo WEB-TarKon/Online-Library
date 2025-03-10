@@ -5,6 +5,7 @@ import { PassportModule } from '@nestjs/passport';
 
 import { User } from './user.entity';
 import { UserController } from '@entities/user/user.controller';
+import { UserMessagingController } from '@entities/user/user.messaging.controller';
 import { UserService } from './user.service';
 import { JwtStrategy } from '../../auth/jwt.strategy';
 
@@ -17,7 +18,7 @@ import { JwtStrategy } from '../../auth/jwt.strategy';
             signOptions: { expiresIn: '1h' },
         }),
     ],
-    controllers: [UserController],
+    controllers: [UserController, UserMessagingController],
     providers: [UserService, JwtStrategy],
     exports: [UserService],
 })

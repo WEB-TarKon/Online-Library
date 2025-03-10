@@ -161,6 +161,21 @@ let UserService = class UserService {
         }
         return this.userRepository.delete(id);
     }
+    async getUserByEmail(email) {
+        return this.userRepository.findOne({
+            where: { email },
+            select: this.availableFields,
+        });
+    }
+    async verifyToken(token) {
+        try {
+            const payload = this.jwtService.verify(token);
+            return { userId: payload.sub, role: payload.role, email: payload.email };
+        }
+        catch (err) {
+            throw new common_1.UnauthorizedException('Invalid token');
+        }
+    }
 };
 exports.UserService = UserService;
 exports.UserService = UserService = __decorate([

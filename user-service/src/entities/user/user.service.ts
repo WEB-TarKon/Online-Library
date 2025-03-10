@@ -174,4 +174,20 @@ export class UserService {
         }
         return this.userRepository.delete(id);
     }
+
+    public async getUserByEmail(email: string) {
+        return this.userRepository.findOne({
+            where: { email },
+            select: this.availableFields as any,
+        });
+    }
+
+    public async verifyToken(token: string) {
+        try {
+            const payload = this.jwtService.verify(token);
+            return { userId: payload.sub, role: payload.role, email: payload.email };
+        } catch (err) {
+            throw new UnauthorizedException('Invalid token');
+        }
+    }
 }

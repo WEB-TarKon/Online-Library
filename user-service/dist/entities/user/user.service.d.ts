@@ -29,4 +29,10 @@ export declare class UserService {
         message: string;
     }>;
     deleteUser(id: string): Promise<import("typeorm").DeleteResult>;
+    getUserByEmail(email: string): Promise<User | null>;
+    verifyToken(token: string): Promise<{
+        userId: any;
+        role: any;
+        email: any;
+    }>;
 }
